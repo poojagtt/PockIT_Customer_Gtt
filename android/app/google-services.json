@@ -1,0 +1,31 @@
+
+{
+  "project_info": {
+    "project_number": "427204155934",
+    "project_id": "pockit-engineers",
+    "storage_bucket": "pockit-engineers.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        
+        "mobilesdk_app_id": "1:427204155934:android:403940228d117bccf5ac0f",
+        "android_client_info": {
+          "package_name": "com.pockitcust"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyImzhgvBNM-DnVU1DbPeBJn9GwuX2TlI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

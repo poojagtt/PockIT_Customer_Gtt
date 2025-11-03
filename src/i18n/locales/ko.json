@@ -1,0 +1,14 @@
+{
+  "common": {
+    "ok": "확인",
+    "cancel": "취소",
+    "close": "닫기",
+    "loading": "로딩 중..."
+  },
+  "cart": {
+    "empty": "장바구니가 비어있습니다",
+    "addItem": "상품 추가",
+    "total": "총액",
+    "checkout": "결제하기"
+  }
+}

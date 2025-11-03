@@ -1,0 +1,31 @@
+{
+  "tasks": [
+    {
+      "id": "task-1",
+      "title": "Create Compose Email Screen",
+      "status": "pending",
+      "asignedAgent": "createScreenAgent",
+      "description": "Create a new email composition screen with recipient field, subject line, message body, and send button. Include attachment options and formatting tools.",
+      "createdAt": "2024-01-15T10:30:00.000Z",
+      "updatedAt": "2024-01-15T10:30:00.000Z"
+    },
+    {
+      "id": "task-2",
+      "title": "Create Email Detail Screen",
+      "status": "pending",
+      "asignedAgent": "createScreenAgent",
+      "description": "Implement a detailed email view screen showing the full email content, with reply, forward, and archive actions. Include proper formatting for email chains.",
+      "createdAt": "2024-01-15T10:30:00.000Z",
+      "updatedAt": "2024-01-15T10:30:00.000Z"
+    },
+    {
+      "id": "task-3",
+      "title": "Create Settings Screen",
+      "status": "pending",
+      "asignedAgent": "createScreenAgent",
+      "description": "Build a settings screen with options for notification preferences, display options, and account management using mock data.",
+      "createdAt": "2024-01-15T10:30:00.000Z",
+      "updatedAt": "2024-01-15T10:30:00.000Z"
+    }
+  ]
+}
