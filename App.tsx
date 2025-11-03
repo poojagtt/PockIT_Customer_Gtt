@@ -119,7 +119,7 @@ const AppContent: React.FC = () => {
   const { splash, user } = useSelector(state => state.app);
   const color = useTheme();
   const insets = useSafeAreaInsets();
-
+console.log("test");
   return (
     <SafeAreaView
       style={{
