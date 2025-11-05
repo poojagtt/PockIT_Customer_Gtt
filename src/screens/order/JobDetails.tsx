@@ -120,6 +120,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({navigation, route}) => {
         })
         .then(res => {
           if (res.data.code == 200) {
+            
             setJobDetails({
               ...jobDetails,
               feedbackData: res.data.feedbackData[0]
