@@ -125,17 +125,19 @@ const ShopHome: React.FC<ShopProps> = ({navigation}) => {
       const response = await apiCall.post('inventory/getForCart', {
         ...filter.value,
         filter:
-          ' AND STATUS = 1 AND IS_HAVE_VARIANTS = 0 AND INVENTORY_TYPE IN ("B", "P")',
-        pageIndex: 1,
-        pageSize: 10,
+          ' AND STATUS = 1 AND IS_HAVE_VARIANTS = 0 AND INVENTORY_TYPE IN ("B", "P") ',
+        // pageIndex: 1,
+        // pageSize: 10,
           sortKey:'ID',
         sortValue:'asc'
       });
       if (response.data.code === 200) {
-        const latest=response.data.data.filter((item:any)=>item.IS_REFURBISHED==0)
+        console.log('Latest Products Response:', response.data.data);
+
+        const latest=response.data.data.filter((item:any)=>item.IS_REFURBISHED==0).slice(0, 10);
        setLatestProducts(latest);
 
-        const refurbished=response.data.data.filter((item:any)=>item.IS_REFURBISHED==1)
+        const refurbished=response.data.data.filter((item:any)=>item.IS_REFURBISHED==1).slice(0, 10);
         setRefurbished(refurbished)
         
       } else {

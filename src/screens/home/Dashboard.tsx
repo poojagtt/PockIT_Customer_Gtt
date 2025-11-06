@@ -321,6 +321,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
       }
     }
   }, []);
+  console.log('first',address)
   useFocusEffect(
     useCallback(() => {
       if (address?.PINCODE_FOR == 'I') {

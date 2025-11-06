@@ -162,7 +162,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ navigation, route }) =>
         Alert.alert(t('shop.popularBrands.error.fetch'));
       }
     } catch (error) {
-      console.error('Error in fetchImages:', error);
+      console.log('Error in fetchImages:', error);
     } finally {
       setLoader(false);
     }

@@ -195,8 +195,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 uri:
                   IMAGE_URL +
                   'InventoryImages/' +
-                  product.INVENTORY_IMAGE +
-                  `?timestamp=${new Date().getTime()}`,
+                  product.INVENTORY_IMAGE 
+                  // `?timestamp=${new Date().getTime()}`
+                  ,
                 cache: 'default',
               }
               : _defaultImage

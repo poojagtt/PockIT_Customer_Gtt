@@ -411,11 +411,17 @@ const getNotificationIcon = (data: any) => {
   }
 
   if (title.includes('job')) {
+    console.log('Determining icon for job notification:', data);
     if (title.includes('completed'))
+     { console.log('Returning check-circle icon for completed job', data);
       return { name: 'check-circle', type: 'Feather', color: '#F39C12' };
-    if (title.includes('scheduled'))
-      return { name: 'calendar-check', type: 'Feather', color: '#F39C12' };
-    if (title.includes('technician has arrived'))
+}    if (title.includes('scheduled'))
+    {
+      console.log('Returning calendar-check icon for scheduled job',data);
+       return { name: 'calendar-check', type: 'MaterialCommunityIcons', color: '#F39C12' };
+
+    }
+         if (title.includes('technician has arrived'))
       return { name: 'map-pin', type: 'Feather', color: '#F39C12' };
     if (title.includes('created'))
       return { name: 'user-check', type: 'Feather', color: '#F39C12' };
