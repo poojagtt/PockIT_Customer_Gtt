@@ -6,6 +6,8 @@ import { Button, Icon } from '../../../components';
 import MapView, { Marker } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import { useTranslation } from 'react-i18next';
+import database from '@react-native-firebase/database';
+
 import LocationMocking from './LocationMocking';
 import Animated, { LinearTransition } from 'react-native-reanimated';
 import { _defaultImage, _techMapIcon } from '../../../assets';
@@ -109,6 +111,77 @@ const TechnicianDetails = ({ jobItem, techData, onMessageClick }: props) => {
     }
   };
   console.log("techData", techData)
+// Calculates distance between 2 lat/long in KM
+const getDistanceKm = (lat1, lon1, lat2, lon2) => {
+  const R = 6371; // Earth radius in KM
+
+  const dLat = (lat2 - lat1) * (Math.PI / 180);
+  const dLon = (lon2 - lon1) * (Math.PI / 180);
+
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * (Math.PI / 180)) *
+      Math.cos(lat2 * (Math.PI / 180)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  return R * c; // distance in KM
+};
+
+const calculateETA = (distanceKm) => {
+  const avgSpeed = 30; // km/hr
+  const hours = distanceKm / avgSpeed;
+  
+  const minutes = Math.round(hours * 60);
+  return minutes;
+};
+  const [currentCoords, setCurrentCoords] = useState<null | {
+    latitude: number;
+    longitude: number;
+  }>(null);
+const [etaMinutes, setEtaMinutes] = useState<string | null>(null);
+const formatETA = (minutes) => {
+  if (minutes < 60) {
+    return `${minutes} min`;
+  }
+
+  const hrs = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+
+  if (mins === 0) {
+    return `${hrs} hr`;
+  }
+
+  return `${hrs} hr ${mins} min`;
+};
+
+  useEffect(() => {
+  const locationRef = database().ref(`Jobs/${jobItem.JOB_CARD_ID}/location`);
+
+  const onValueChange = locationRef.on('value', snapshot => {
+    const loc = snapshot.val();
+    if (!loc) return;
+
+    const techLat = loc.latitude;
+    const techLng = loc.longitude;
+
+    const custLat = jobItem.LATITUDE;
+    const custLng = jobItem.LONGITUDE;
+
+    setCurrentCoords({ latitude: techLat, longitude: techLng });
+
+    const distanceKm = getDistanceKm(techLat, techLng, custLat, custLng);
+    const etaMinutes = calculateETA(distanceKm);
+    setEtaMinutes(formatETA(etaMinutes));
+    console.log("Distance from customer:", distanceKm.toFixed(2), "KM");
+    console.log("Estimated arrival time:", etaMinutes, "minutes");
+  });
+
+  return () => locationRef.off('value', onValueChange);
+}, [jobItem]);
+
   return (
     
     <Animated.View
@@ -187,7 +260,13 @@ const TechnicianDetails = ({ jobItem, techData, onMessageClick }: props) => {
         </View>
         <View style={{ height: Size.sm }} />
         {techData.TRACK_STATUS == 'ST' && (
+          <>{etaMinutes !== null && (
+  <Text style={{ fontSize: 14, fontWeight: '600', color: colors.secondary ,marginBottom: 12}}>
+    Technician will reach in approx {etaMinutes}
+  </Text>
+)}
           <LocationMocking jobItem={jobItem} />
+          </>
           // <MapView
           //   ref={mapRef}
           //   style={{height: 250, width: '100%', borderRadius: Size.radius}}
@@ -199,6 +278,7 @@ const TechnicianDetails = ({ jobItem, techData, onMessageClick }: props) => {
           //     }}
           //   />
           // </MapView>
+          
         )}
         <View />
         {techData.ID && jobItem.ORDER_STATUS != "CO" && (

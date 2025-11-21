@@ -7,13 +7,14 @@ import {
   RefreshControl,
   Image,
 } from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import database from '@react-native-firebase/database';
 
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import ThreeDotMenu from './ThreeDotMenu';
-import {useSelector} from '../../context';
-import {apiCall, fontFamily, IMAGE_URL, Size, useTheme} from '../../modules';
-import {Icon, Header, Loader} from '../../components';
+import { useSelector } from '../../context';
+import { apiCall, fontFamily, IMAGE_URL, Size, useTheme } from '../../modules';
+import { Icon, Header, Loader } from '../../components';
 import JobStatus from './components/JobStatus';
 import moment from 'moment';
 import TechnicianDetails from './components/TechnicianDetails';
@@ -22,12 +23,12 @@ import RateUs from './components/RateUs';
 import StarRating from 'react-native-star-rating-widget';
 import PartDetails from './components/PartDetails';
 import OrderInfoModal from './components/OrderInfoModal';
-import {OrderRoutes} from '../../routes/Order';
-import {useTranslation} from 'react-i18next';
-import Animated, {LinearTransition} from 'react-native-reanimated';
-import {formatPeriod} from '../../Functions';
-import {AppLogo} from '../../assets';
-interface JobDetailsProps extends OrderRoutes<'JobDetails'> {}
+import { OrderRoutes } from '../../routes/Order';
+import { useTranslation } from 'react-i18next';
+import Animated, { LinearTransition } from 'react-native-reanimated';
+import { formatPeriod } from '../../Functions';
+import { AppLogo } from '../../assets';
+interface JobDetailsProps extends OrderRoutes<'JobDetails'> { }
 interface jobDetailsProps {
   loading: boolean;
   feedbackData: {
@@ -52,11 +53,11 @@ interface jobDetailsProps {
   partData: partListDetail[];
 }
 const Duration = 300;
-const JobDetails: React.FC<JobDetailsProps> = ({navigation, route}) => {
-  const {user, address} = useSelector(state => state.app);
+const JobDetails: React.FC<JobDetailsProps> = ({ navigation, route }) => {
+  const { user, address } = useSelector(state => state.app);
   const colors = useTheme();
-  const {t} = useTranslation();
-  const {jobItem} = route.params;
+  const { t } = useTranslation();
+  const { jobItem } = route.params;
   const [loader, setLoader] = useState(false);
   const [expandCard, setExpandCard] = useState({
     showMenu: false,
@@ -109,7 +110,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({navigation, route}) => {
   const gerJobDetails = async () => {
     setLoader(true);
     try {
-      setJobDetails({...jobDetails, loading: true});
+      setJobDetails({ ...jobDetails, loading: true });
       await apiCall
         .post(`api/jobcard/getjobDetailsWithFeedback`, {
           CUSTOMER_ID: user?.ID,
@@ -120,7 +121,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({navigation, route}) => {
         })
         .then(res => {
           if (res.data.code == 200) {
-            
+
             setJobDetails({
               ...jobDetails,
               feedbackData: res.data.feedbackData[0]
@@ -144,12 +145,14 @@ const JobDetails: React.FC<JobDetailsProps> = ({navigation, route}) => {
           return null;
         });
     } catch (error) {
-      setJobDetails({...jobDetails, loading: false});
+      setJobDetails({ ...jobDetails, loading: false });
       console.warn('error..', error);
     } finally {
       setLoader(false);
     }
   };
+
+  console.log('jobDetails...', jobItem);
 
   const getJobStatus = () => {
     setLoader(true);
@@ -200,14 +203,14 @@ const JobDetails: React.FC<JobDetailsProps> = ({navigation, route}) => {
     }
   };
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: colors.background}}>
-      <View style={{flexDirection: 'row', backgroundColor: 'white'}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+      <View style={{ flexDirection: 'row', backgroundColor: 'white' }}>
         <Header
           label={t('jobDetails.title')}
           onBack={() => navigation.goBack()}
         />
         {!loader && address?.TERRITORY_ID && jobItem.JOB_STATUS == 'CO' && (
-          <View style={{flex: 1}}>
+          <View style={{ flex: 1 }}>
             <View
               style={{
                 alignItems: 'flex-end',
@@ -230,7 +233,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({navigation, route}) => {
             {expandCard.showMenu && (
               <ThreeDotMenu
                 onRequestClose={() =>
-                  setExpandCard({...expandCard, showMenu: false})
+                  setExpandCard({ ...expandCard, showMenu: false })
                 }
                 isVisible={expandCard.showMenu}
                 isShowDownload={false}
@@ -241,7 +244,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({navigation, route}) => {
                     orderId: jobItem.ORDER_ID,
                     type: 'J',
                   });
-                  setExpandCard({...expandCard, showMenu: false});
+                  setExpandCard({ ...expandCard, showMenu: false });
                 }}
                 isShowReschedule={false}
                 isShowCancel={false}
@@ -264,7 +267,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({navigation, route}) => {
                 colors={['#2A3B8F']}
               />
             }>
-            <View style={{gap: 6, marginTop: Size.paddingY}}>
+            <View style={{ gap: 6, marginTop: Size.paddingY }}>
               {/* job status */}
               <JobStatus jobDetails={jobItem} jobStatus={jobStatusData} />
 
@@ -276,7 +279,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({navigation, route}) => {
                     jobItem={jobItem}
                     techData={jobDetails.techData}
                     onMessageClick={() => {
-                      navigation.navigate('ChatScreen', {jobItem});
+                      navigation.navigate('ChatScreen', { jobItem });
                     }}
                   />
                 </Animated.View>
@@ -302,9 +305,9 @@ const JobDetails: React.FC<JobDetailsProps> = ({navigation, route}) => {
                     <Text style={styles._detailsTitleTxt}>
                       {t('jobDetails.partPayment.title')}
                     </Text>
-                    <View style={{marginTop: 6}}>
+                    <View style={{ marginTop: 6 }}>
                       <Text
-                        style={[styles._label, {color: '#7a7a79', flex: 1}]}>
+                        style={[styles._label, { color: '#7a7a79', flex: 1 }]}>
                         {t('jobDetails.partPayment.description')}
                       </Text>
                     </View>
@@ -329,7 +332,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({navigation, route}) => {
                       });
                     }}
                     activeOpacity={0.8}>
-                    <View style={{flexDirection: 'row', gap: 8}}>
+                    <View style={{ flexDirection: 'row', gap: 8 }}>
                       <Icon
                         type="Feather"
                         name="box"
@@ -344,7 +347,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({navigation, route}) => {
                       <Text
                         style={[
                           styles._label,
-                          {flex: 1, fontFamily: fontFamily},
+                          { flex: 1, fontFamily: fontFamily },
                         ]}>
                         {t('jobDetails.partDetails.description')}
                       </Text>
@@ -358,7 +361,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({navigation, route}) => {
                 (jobDetails.feedbackData.service_feedback ? (
                   <Animated.View
                     layout={LinearTransition.stiffness(45).duration(Duration)}
-                    style={[styles._card, {gap: Size.md}]}>
+                    style={[styles._card, { gap: Size.md }]}>
                     <View
                       style={{
                         flexDirection: 'row',
@@ -375,17 +378,17 @@ const JobDetails: React.FC<JobDetailsProps> = ({navigation, route}) => {
                         {t('jobDetails.feedback.title')}
                       </Text>
                     </View>
-                    <View style={{gap: 10, marginTop: 5}}>
+                    <View style={{ gap: 10, marginTop: 5 }}>
                       <View style={{}}>
                         <Text style={[styles._label]}>
                           {t('jobDetails.feedback.serviceRating')}:
                         </Text>
                         <StarRating
                           rating={jobDetails.feedbackData.service_feedback}
-                          onChange={(e: any) => {}}
+                          onChange={(e: any) => { }}
                           starSize={30}
                           enableHalfStar={false}
-                          starStyle={{marginHorizontal: -0.5}}
+                          starStyle={{ marginHorizontal: -0.5 }}
                         />
                       </View>
                       <View style={{}}>
@@ -394,10 +397,10 @@ const JobDetails: React.FC<JobDetailsProps> = ({navigation, route}) => {
                         </Text>
                         <StarRating
                           rating={jobDetails.feedbackData.technician_feedback}
-                          onChange={(e: any) => {}}
+                          onChange={(e: any) => { }}
                           starSize={30}
                           enableHalfStar={false}
-                          starStyle={{marginHorizontal: -0.5}}
+                          starStyle={{ marginHorizontal: -0.5 }}
                         />
                       </View>
                     </View>
@@ -424,7 +427,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({navigation, route}) => {
               {/*  details */}
               <Animated.View
                 layout={LinearTransition.stiffness(45).duration(Duration)}
-                style={[styles._card, {marginBottom: 5}]}>
+                style={[styles._card, { marginBottom: 5 }]}>
                 <View style={styles._orderContainer}>
                   <View
                     style={{
@@ -440,20 +443,20 @@ const JobDetails: React.FC<JobDetailsProps> = ({navigation, route}) => {
                     color={colors.primary}
                   /> */}
                     <Image
-                      style={{height: 40, width: 40}}
+                      style={{ height: 40, width: 40 }}
                       defaultSource={AppLogo}
                       source={
                         jobItem.SERVICE_IMAGE
                           ? {
-                              uri: IMAGE_URL + 'Item/' + jobItem.SERVICE_IMAGE,
-                              cache: 'default',
-                            }
+                            uri: IMAGE_URL + 'Item/' + jobItem.SERVICE_IMAGE,
+                            cache: 'default',
+                          }
                           : AppLogo
                       }></Image>
                     <Text
                       style={[
                         styles._detailsTitleTxt,
-                        {flexWrap: 'wrap', maxWidth: '80%'},
+                        { flexWrap: 'wrap', maxWidth: '80%' },
                       ]}>
                       {jobItem.ORDER_SERVICE_NAME}
                     </Text>
@@ -472,9 +475,8 @@ const JobDetails: React.FC<JobDetailsProps> = ({navigation, route}) => {
                     fontSize: 12,
                     fontWeight: 400,
                     fontFamily: fontFamily,
-                  }}>{`${t('jobDetails.jobNumber')} : ${
-                  jobItem.JOB_CARD_NO
-                }`}</Text>
+                  }}>{`${t('jobDetails.jobNumber')} : ${jobItem.JOB_CARD_NO
+                    }`}</Text>
                 {/* <TouchableOpacity
                 activeOpacity={0.7}
                 onPress={() => {}}
@@ -521,16 +523,16 @@ const JobDetails: React.FC<JobDetailsProps> = ({navigation, route}) => {
                     }}>
                     {jobItem?.SCHEDULED_DATE_TIME
                       ? moment(jobItem?.SCHEDULED_DATE_TIME).format(
-                          `ddd, MMM D [at] `,
-                        ) +
-                        moment(jobItem.JOB_START_TIME, 'HH:mm:ss').format(
-                          'hh:mm A',
-                        )
+                        `ddd, MMM D [at] `,
+                      ) +
+                      moment(jobItem.JOB_START_TIME, 'HH:mm:ss').format(
+                        'hh:mm A',
+                      )
                       : t('jobDetails.details.notMentioned')}
                   </Text>
                 </View>
 
-                <View style={{gap: 10, marginTop: 15}}>
+                <View style={{ gap: 10, marginTop: 15 }}>
                   <View style={styles._row}>
                     <Text style={[styles._label]}>
                       {t('jobDetails.details.estimatedTime')}:
@@ -538,8 +540,8 @@ const JobDetails: React.FC<JobDetailsProps> = ({navigation, route}) => {
                     <Text style={[styles._value]}>
                       {jobItem?.ESTIMATED_TIME_IN_MIN
                         ? `${jobItem?.ESTIMATED_TIME_IN_MIN} ${t(
-                            'jobDetails.details.minutes',
-                          )}`
+                          'jobDetails.details.minutes',
+                        )}`
                         : t('jobDetails.details.notMentioned')}
                     </Text>
                   </View>
@@ -576,11 +578,11 @@ const JobDetails: React.FC<JobDetailsProps> = ({navigation, route}) => {
                       style={[styles._value]}>
                       {jobItem?.SCHEDULED_DATE_TIME
                         ? moment(jobItem?.SCHEDULED_DATE_TIME).format(
-                            `ddd, MMM D [at] `,
-                          ) +
-                          moment(jobItem.JOB_START_TIME, 'HH:mm:ss').format(
-                            'hh:mm A',
-                          )
+                          `ddd, MMM D [at] `,
+                        ) +
+                        moment(jobItem.JOB_START_TIME, 'HH:mm:ss').format(
+                          'hh:mm A',
+                        )
                         : t('jobDetails.details.notMentioned')}
                     </Text>
                   </View>
@@ -651,7 +653,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     shadowColor: '#000',
     shadowOpacity: 0.1,
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowRadius: 6,
     elevation: 2,
   },

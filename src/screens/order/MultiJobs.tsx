@@ -106,6 +106,25 @@ const MultiJobs: React.FC<MultiJobProps> = ({ navigation, route }) => {
   pendingPaymentsData: PaymentRecord;
   partData: partListDetail[];
 }
+
+ useEffect(() => {
+    getStatus();
+  }, []);
+ const getStatus = async () => {
+    try {
+      const res = await apiCall.post('api/technicianLocationTrack/get', {
+        filter: ` AND ORDER_ID = ${item.ID} `,
+        // sortKey: 'SEND_DATE',
+        // sortValue: 'ASC',
+      });
+      if (res.data && res.data.code === 200) {
+       console.log('res.data.data', res.data.data);
+      }
+    } catch (error) {
+      console.error(t('chat.alerts.errors.getMessages'), error);
+      
+    }
+  };
 console.log("1",item);
    const [jobDetails, setJobDetails] = useState<jobDetailsProps>({
       loading: false,
